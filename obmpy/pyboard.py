@@ -124,13 +124,13 @@ class Pyboard:
         _rawdelay = rawdelay
         if device and device[0].isdigit() and device[-1].isdigit() and device.count('.') == 3:
             # device looks like an IP address
-            self.serial = TelnetToSerial(device, user, password, read_timeout=10)
+            self.serial = TelnetToSerial(device, user, password, read_timeout=0.5)
         else:
             import serial
             delayed = False
             for attempt in range(wait + 1):
                 try:
-                    self.serial = serial.Serial(device, baudrate=baudrate, interCharTimeout=1, timeout=1)
+                    self.serial = serial.Serial(device, baudrate=baudrate, interCharTimeout=1, timeout=0.5)
                     break
                 except (OSError, IOError): # Py2 and Py3 have different errors
                     if wait == 0:
@@ -151,7 +151,7 @@ class Pyboard:
     def close(self):
         self.serial.close()
 
-    def read_until(self, min_num_bytes, ending, timeout=1, data_consumer=None):
+    def read_until(self, min_num_bytes, ending, timeout=0.5, data_consumer=None):
         data = self.serial.read(min_num_bytes)
         if data_consumer:
             data_consumer(data)
@@ -189,14 +189,14 @@ class Pyboard:
             self.serial.read(n)
             n = self.serial.inWaiting()
 
-        for retry in range(0, 2): 
+        for retry in range(0, 3): 
 
             self.serial.write(b'\r\x01') # ctrl-A: enter raw REPL
             data = self.read_until(1, b'raw REPL; CTRL-B to exit\r\n>')
             if data.endswith(b'raw REPL; CTRL-B to exit\r\n>'):
                 break
             else:
-                if retry >= 4:
+                if retry >= 3:
                     print(data)
                     raise PyboardError('could not enter raw repl')
                 time.sleep(0.2)

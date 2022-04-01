@@ -29,14 +29,14 @@ import serial.serialutil
 import click
 import dotenv
 
-# Load AMPY_PORT et al from .ampy file
+# Load AMPY_PORT et al from .obmpy file
 # Performed here because we need to beat click's decorators.
-config = dotenv.find_dotenv(filename=".ampy", usecwd=True)
+config = dotenv.find_dotenv(filename=".obmpy", usecwd=True)
 if config:
     dotenv.load_dotenv(dotenv_path=config)
 
-import ampy.files as files
-import ampy.pyboard as pyboard
+import obmpy.files as files
+import obmpy.pyboard as pyboard
 
 
 _board = None
@@ -85,7 +85,7 @@ def windows_full_port_name(portname):
 )
 @click.version_option()
 def cli(port, baud, delay):
-    """ampy - Adafruit MicroPython Tool
+    """ampy - OpenBlock MicroPython Tool
 
     Ampy is a tool to control MicroPython boards over a serial connection.  Using
     ampy you can manipulate files on the board's internal filesystem and even run
@@ -429,8 +429,7 @@ def reset(mode):
         # serial when restarted via microcontroller.reset()
         pass
 
-
-if __name__ == "__main__":
+def cli_entry():
     try:
         cli()
     finally:

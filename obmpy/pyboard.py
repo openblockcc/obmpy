@@ -130,7 +130,7 @@ class Pyboard:
             delayed = False
             for attempt in range(wait + 1):
                 try:
-                    self.serial = serial.Serial(device, baudrate=baudrate, interCharTimeout=1)
+                    self.serial = serial.Serial(device, baudrate=baudrate, interCharTimeout=1, timeout=1)
                     break
                 except (OSError, IOError): # Py2 and Py3 have different errors
                     if wait == 0:
@@ -151,7 +151,7 @@ class Pyboard:
     def close(self):
         self.serial.close()
 
-    def read_until(self, min_num_bytes, ending, timeout=10, data_consumer=None):
+    def read_until(self, min_num_bytes, ending, timeout=1, data_consumer=None):
         data = self.serial.read(min_num_bytes)
         if data_consumer:
             data_consumer(data)
@@ -189,7 +189,8 @@ class Pyboard:
             self.serial.read(n)
             n = self.serial.inWaiting()
 
-        for retry in range(0, 5): 
+        for retry in range(0, 2): 
+
             self.serial.write(b'\r\x01') # ctrl-A: enter raw REPL
             data = self.read_until(1, b'raw REPL; CTRL-B to exit\r\n>')
             if data.endswith(b'raw REPL; CTRL-B to exit\r\n>'):

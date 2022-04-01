@@ -1,4 +1,4 @@
-# Copyright (c) 2018 Adafruit Industries
+# Copyright (c) 2022 OpenBlock.cc
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -33,22 +33,22 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    version="1.1.0",
-    name='adafruit-ampy',
+    version="1.1.1",
+    name='openblock-obmpy',
 
     # use_scm_version=True,
     # setup_requires=['setuptools_scm'],
 
-    description='ampy (Adafruit MicroPython tool) is a command line tool to interact with a CircuitPython or MicroPython board over a serial connection.',
+    description='obmpy (OpenBlock MicroPython tool) is a command line tool to interact with a CircuitPython or MicroPython board over a serial connection.',
     long_description=long_description,
     long_description_content_type='text/markdown',
 
     # The project's main homepage.
-    url='https://github.com/adafruit/ampy',
+    url='https://github.com/openblock/obmpy',
 
     # Author details
-    author='Adafruit Industries',
-    author_email='circuitpython@adafruit.com',
+    author='OpenBlock Team',
+    author_email='arthurzheng@openblock.cc',
 
     install_requires=['click', 'pyserial', 'python-dotenv'],
 
@@ -70,13 +70,13 @@ setup(
     ],
 
     # What does your project relate to?
-    keywords='adafruit ampy hardware micropython circuitpython',
+    keywords='openblock obmpy hardware micropython circuitpython',
 
     packages=find_packages(),
 
     entry_points={
         'console_scripts': [
-            'ampy=ampy.cli:cli',
+            'obmpy=obmpy.__init__:_main',
         ],
     },
 )

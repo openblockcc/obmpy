@@ -1,54 +1,47 @@
-# ampy replacement
-We have been working on the next version of ampy which will solve various problems with the current system. Based on a new modular architecture, it makes adding device support and features very simple using plugins. It also aims to support coding over WiFi for supported devices. This should eliminate the need to have a wired connection and improve reliability as well.
-[Here](https://github.com/curiouswala/ampy-2) is an alpha release please go ahead and play with it. Leave suggestions for a new name in the issue section. :)
+## obmpy
 
-## ampy
+This tool is modified from [ampy](https://github.com/scientifichackers/ampy), which fixes the bug that the serial port can not time out, and supports calling with python -m
 
-MicroPython Tool (ampy) - Utility to interact with a CircuitPython or MicroPython board over a serial connection.
+MicroPython Tool (obmpy) - Utility to interact with a CircuitPython or MicroPython board over a serial connection.
 
-Ampy is meant to be a simple command line tool to manipulate files and run code on a CircuitPython or
+Obmpy is meant to be a simple command line tool to manipulate files and run code on a CircuitPython or
 MicroPython board over its serial connection.
-With ampy you can send files from your computer to the
+With obmpy you can send files from your computer to the
 board's file system, download files from a board to your computer, and even send a Python script
 to a board to be executed.
 
-Note that ampy by design is meant to be simple and does not support advanced interaction like a shell
-or terminal to send input to a board.  Check out other MicroPython tools
-like [rshell](https://github.com/dhylands/rshell)
-or [mpfshell](https://github.com/wendlers/mpfshell) for more advanced interaction with boards.
-
 ## Installation
 
-You can use ampy with either Python 2.7.x or 3.x and can install it easily from
+You can use obmpy with either Python 2.7.x or 3.x and can install it easily from
 Python's package index.  On MacOS or Linux, in a terminal run the following command (assuming
 Python 3):
 
-    pip3 install --user adafruit-ampy
+    pip3 install --user openblock-obmpy
 
 On Windows, do:
 
-    pip install adafruit-ampy
+    pip install openblock-obmpy
 
 Note on some Linux and Mac OSX systems you might need to run as root with sudo:
 
-    sudo pip3 install adafruit-ampy
+    sudo pip3 install openblock-obmpy
 
 If you don't have Python 3 then try using Python 2 with:
 
-    pip install adafruit-ampy
+    pip install openblock-obmpy
 
-Once installed verify you can run the ampy program and get help output:
+Once installed verify you can run the obmpy program and get help output:
 
-    ampy --help
+    obmpy --help
 
 You should see usage information displayed like below:
 
-    Usage: ampy [OPTIONS] COMMAND [ARGS]...
+    Usage: obmpy [OPTIONS] COMMAND [ARGS]...
 
-      ampy - Adafruit MicroPython Tool
+      obmpy - Adafruit MicroPython Tool
 
-      Ampy is a tool to control MicroPython boards over a serial connection.
-      Using ampy you can manipulate files on the board's internal filesystem and
+      Obmpy is a tool to control MicroPython boards over a serial connection.
+      Using obmpy you can manipulate files on the board's internal filesystem and
       even run scripts.
 
     Options:
@@ -75,24 +68,24 @@ Note to run the unit tests on Python 2 you must install the mock library:
 
 ## Usage
 
-Ampy is made to talk to a CircuitPython MicroPython board over its serial connection.  You will
+Obmpy is made to talk to a CircuitPython MicroPython board over its serial connection.  You will
 need your board connected and any drivers to access it serial port installed.
 Then for example to list the files on the board run a command like:
 
-    ampy --port /dev/tty.SLAB_USBtoUART ls
+    obmpy --port /dev/tty.SLAB_USBtoUART ls
 
 You should see a list of files on the board's root directory printed to the
 terminal.  Note that you'll need to change the port parameter to the name or path
 to the serial port that the MicroPython board is connected to.
 
-Other commands are available, run ampy with --help to see more information:
+Other commands are available, run obmpy with --help to see more information:
 
-    ampy --help
+    obmpy --help
 
 Each subcommand has its own help, for example to see help for the ls command  run (note you
 unfortunately must have a board connected and serial port specified):
 
-    ampy --port /dev/tty.SLAB_USBtoUART ls --help
+    obmpy --port /dev/tty.SLAB_USBtoUART ls --help
 
 ## Configuration
 
@@ -100,21 +93,21 @@ For convenience you can set an `AMPY_PORT` environment variable which will be us
 if the port parameter is not specified.  For example on Linux or OSX:
 
     export AMPY_PORT=/dev/tty.SLAB_USBtoUART
-    ampy ls
+    obmpy ls
 
 Or on Windows (untested) try the SET command:
 
     set AMPY_PORT=COM4
-    ampy ls
+    obmpy ls
 
 Similarly, you can set `AMPY_BAUD` and `AMPY_DELAY` to control your baud rate and
 the delay before entering RAW MODE.
 
-To set these variables automatically each time you run `ampy`, copy them into a
-file named `.ampy`:
+To set these variables automatically each time you run `obmpy`, copy them into a
+file named `.obmpy`:
 
 ```sh
-# Example .ampy file
+# Example .obmpy file
 # Please fill in your own port, baud rate, and delay
 AMPY_PORT=/dev/cu.wchusbserial1410
 AMPY_BAUD=115200
@@ -122,5 +115,5 @@ AMPY_BAUD=115200
 AMPY_DELAY=0.5
 ```
 
-You can put the `.ampy` file in your working directory, one of its parents, or in
+You can put the `.obmpy` file in your working directory, one of its parents, or in
 your home directory.

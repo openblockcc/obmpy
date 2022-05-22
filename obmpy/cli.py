@@ -102,7 +102,7 @@ def windows_full_port_name(portname):
     metavar="ABORTTIME",
 )
 @click.version_option()
-def cli(port, baud, delay, rtsdtr, reset_time):
+def cli(port, baud, delay, rtsdtr, abort_time):
     """obmpy - OpenBlock MicroPython Tool
 
     Obmpy is a tool to control MicroPython boards over a serial connection.  Using

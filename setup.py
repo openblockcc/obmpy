@@ -33,7 +33,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    version="1.1.5",
+    version="1.1.6",
     name='openblock-obmpy',
 
     # use_scm_version=True,

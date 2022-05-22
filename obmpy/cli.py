@@ -89,11 +89,20 @@ def windows_full_port_name(portname):
     envvar="OBMPY_RTSDTR",
     default=True,
     type=click.BOOL,
-    help="Set RTS/DTR flow control (default True).  Can optionally specify with OBMPY_RTSDTR environment variable.",
+    help="Set RTS/DTR flow control (default True). Can optionally specify with OBMPY_RTSDTR environment variable.",
     metavar="RTSDTR",
 )
+@click.option(
+    "--abort-time",
+    "-a",
+    envvar="OBMPY_ABORTTIME",
+    default=2,
+    type=click.INT,
+    help="The number of times an abort command was sent after entering repl mode (default 2). Can optionally specify with ABORT_TIME environment variable.",
+    metavar="ABORTTIME",
+)
 @click.version_option()
-def cli(port, baud, delay, rtsdtr):
+def cli(port, baud, delay, rtsdtr, reset_time):
     """obmpy - OpenBlock MicroPython Tool
 
     Obmpy is a tool to control MicroPython boards over a serial connection.  Using
@@ -105,7 +114,7 @@ def cli(port, baud, delay, rtsdtr):
     # windows_full_port_name function).
     if platform.system() == "Windows":
         port = windows_full_port_name(port)
-    _board = pyboard.Pyboard(port, baudrate=baud, rawdelay=delay, rtsdtr=rtsdtr)
+    _board = pyboard.Pyboard(port, baudrate=baud, rawdelay=delay, rtsdtr=rtsdtr, abort_time=abort_time)
 
 
 @cli.command()

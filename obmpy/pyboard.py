@@ -119,9 +119,10 @@ class TelnetToSerial:
             return n_waiting
 
 class Pyboard:
-    def __init__(self, device, baudrate=115200, user='micro', password='python', wait=0, rawdelay=0, rtsdtr=True):
-        global _rawdelay
+    def __init__(self, device, baudrate=115200, user='micro', password='python', wait=0, rawdelay=0, rtsdtr=True, abort_time = 2):
+        global _rawdelay, _abort_time
         _rawdelay = rawdelay
+        _abort_time = abort_time
         if device and device[0].isdigit() and device[-1].isdigit() and device.count('.') == 3:
             # device looks like an IP address
             self.serial = TelnetToSerial(device, user, password, read_timeout=0.5)
@@ -180,10 +181,14 @@ class Pyboard:
             time.sleep(_rawdelay)
 
         # ctrl-C twice: interrupt any running program
-        self.serial.write(b'\r\x03')
-        time.sleep(0.1)
-        self.serial.write(b'\x03')
-        time.sleep(0.1)
+        if(_abort_time == 1):
+            self.serial.write(b'\r\x03')
+            time.sleep(0.1)
+        else:
+            self.serial.write(b'\r\x03')
+            time.sleep(0.1)
+            self.serial.write(b'\x03')
+            time.sleep(0.1)
 
         # flush input (without relying on serial.flushInput())
         n = self.serial.inWaiting()

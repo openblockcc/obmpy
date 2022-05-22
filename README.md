@@ -51,6 +51,7 @@ You should see usage information displayed like below:
       -b, --baud BAUD  Baud rate for the serial connection. (default 115200)
       -d, --delay DELAY Delay in seconds before entering RAW MODE (default 0)
       -r, --rtsdtr Set RTS/DTR flow control (default True)
+      -a, --abort-time ABORTTIME The number of times an abort command was sent after entering repl mode (default 2)
       --help           Show this message and exit.
 
     Commands:
@@ -118,6 +119,8 @@ OBMPY_BAUD=115200
 OBMPY_DELAY=0.5
 # To set rts and dtr level
 OBMPY_RTSDTR=False
+# Fix for k210 'could not enter raw repl', Just send one 0x03 when try to bort task.
+OBMPY_ABORTTIME=1
 ```
 
 You can put the `.obmpy` file in your working directory, one of its parents, or in

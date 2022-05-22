@@ -1,5 +1,7 @@
 ## obmpy
 
+[![Publish PyPI Package](https://github.com/openblockcc/obmpy/actions/workflows/publish.yml/badge.svg)](https://github.com/openblockcc/obmpy/actions/workflows/publish.yml)
+
 This tool is modified from [ampy](https://github.com/scientifichackers/ampy), which fixes the bug that the serial port can not time out, and supports calling with python -m. At the same time, it also supports setting rts/dtr to support K210 MaixDock and other devices that need to set the rts and dtr level to high to run.
 
 MicroPython Tool (obmpy) - Utility to interact with a CircuitPython or MicroPython board over a serial connection.

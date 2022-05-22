@@ -2,7 +2,6 @@ name: Publish PyPI Package
 
 on:
   push:
-    branches: [ master ]
     paths-ignore:
       - 'README.md'
       - '.github/*'
@@ -18,19 +17,21 @@ jobs:
         with:
           python-version: 3.9
 
-      - name: Install Twine
-        run: >-
-          pip install twine
+      - name: Install dependencies
+        run: |
+          # Upgrade pip
+          python3 -m pip install --upgrade pip
+          python3 -m pip install setuptools wheel twine
 
       - name: Build a binary wheel and a source tarball
-        run: >-
-          python setup.py sdist bdist_wheel
-          twine check dist/*
+        run: |
+          python3 setup.py sdist bdist_wheel
+          python3 -m twine check dist/*
 
       - name: Publish to PyPI
-          if: startsWith(github.ref, 'refs/tags')
-          uses: pypa/gh-action-pypi-publish@master
-          with:
-            user: __token__
-            password: ${{ secrets.PYPI_API_TOKEN }}
+        if: startsWith(github.ref, 'refs/tags')
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_API_TOKEN }}
           

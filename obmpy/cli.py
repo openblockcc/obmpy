@@ -29,7 +29,7 @@ import serial.serialutil
 import click
 import dotenv
 
-# Load AMPY_PORT et al from .obmpy file
+# Load OBMPY_PORT et al from .obmpy file
 # Performed here because we need to beat click's decorators.
 config = dotenv.find_dotenv(filename=".obmpy", usecwd=True)
 if config:
@@ -59,36 +59,45 @@ def windows_full_port_name(portname):
 @click.option(
     "--port",
     "-p",
-    envvar="AMPY_PORT",
+    envvar="OBMPY_PORT",
     required=True,
     type=click.STRING,
-    help="Name of serial port for connected board.  Can optionally specify with AMPY_PORT environment variable.",
+    help="Name of serial port for connected board.  Can optionally specify with OBMPY_PORT environment variable.",
     metavar="PORT",
 )
 @click.option(
     "--baud",
     "-b",
-    envvar="AMPY_BAUD",
+    envvar="OBMPY_BAUD",
     default=115200,
     type=click.INT,
-    help="Baud rate for the serial connection (default 115200).  Can optionally specify with AMPY_BAUD environment variable.",
+    help="Baud rate for the serial connection (default 115200).  Can optionally specify with OBMPY_BAUD environment variable.",
     metavar="BAUD",
 )
 @click.option(
     "--delay",
     "-d",
-    envvar="AMPY_DELAY",
+    envvar="OBMPY_DELAY",
     default=0,
     type=click.FLOAT,
-    help="Delay in seconds before entering RAW MODE (default 0). Can optionally specify with AMPY_DELAY environment variable.",
+    help="Delay in seconds before entering RAW MODE (default 0). Can optionally specify with OBMPY_DELAY environment variable.",
     metavar="DELAY",
 )
+@click.option(
+    "--rtsdtr",
+    "-r",
+    envvar="OBMPY_RTSDTR",
+    default=True,
+    type=click.BOOL,
+    help="Set RTS/DTR flow control (default True).  Can optionally specify with OBMPY_RTSDTR environment variable.",
+    metavar="RTSDTR",
+)
 @click.version_option()
-def cli(port, baud, delay):
-    """ampy - OpenBlock MicroPython Tool
+def cli(port, baud, delay, rtsdtr):
+    """obmpy - OpenBlock MicroPython Tool
 
-    Ampy is a tool to control MicroPython boards over a serial connection.  Using
-    ampy you can manipulate files on the board's internal filesystem and even run
+    Obmpy is a tool to control MicroPython boards over a serial connection.  Using
+    obmpy you can manipulate files on the board's internal filesystem and even run
     scripts.
     """
     global _board
@@ -96,7 +105,7 @@ def cli(port, baud, delay):
     # windows_full_port_name function).
     if platform.system() == "Windows":
         port = windows_full_port_name(port)
-    _board = pyboard.Pyboard(port, baudrate=baud, rawdelay=delay)
+    _board = pyboard.Pyboard(port, baudrate=baud, rawdelay=delay, rtsdtr=rtsdtr)
 
 
 @cli.command()
@@ -115,11 +124,11 @@ def get(remote_file, local_file):
 
     For example to retrieve the boot.py and print it out run:
 
-      ampy --port /board/serial/port get boot.py
+      obmpy --port /board/serial/port get boot.py
 
     Or to get main.py and save it as main.py locally run:
 
-      ampy --port /board/serial/port get main.py main.py
+      obmpy --port /board/serial/port get main.py main.py
     """
     # Get the file contents.
     board_files = files.Files(_board)
@@ -152,12 +161,12 @@ def mkdir(directory, exists_okay, make_parents):
     
     For example to make a directory under the root called 'code':
 
-      ampy --port /board/serial/port mkdir /code
+      obmpy --port /board/serial/port mkdir /code
       
-    To make a directory under the root called 'code/for/ampy', along with all
+    To make a directory under the root called 'code/for/obmpy', along with all
     missing parents:
 
-      ampy --port /board/serial/port mkdir --make-parents /code/for/ampy
+      obmpy --port /board/serial/port mkdir --make-parents /code/for/obmpy
     """
     # Run the mkdir command.
     board_files = files.Files(_board)
@@ -193,16 +202,16 @@ def ls(directory, long_format, recursive):
 
     For example to list the contents of the root run:
 
-      ampy --port /board/serial/port ls
+      obmpy --port /board/serial/port ls
 
     Or to list the contents of the /foo/bar directory on the board run:
 
-      ampy --port /board/serial/port ls /foo/bar
+      obmpy --port /board/serial/port ls /foo/bar
 
     Add the -l or --long_format flag to print the size of files (however note
     MicroPython does not calculate the size of folders and will show 0 bytes):
 
-      ampy --port /board/serial/port ls -l /foo/bar
+      obmpy --port /board/serial/port ls -l /foo/bar
     """
     # List each file/directory on a separate line.
     board_files = files.Files(_board)
@@ -227,22 +236,22 @@ def put(local, remote):
     For example to upload a main.py from the current directory to the board's
     root run:
 
-      ampy --port /board/serial/port put main.py
+      obmpy --port /board/serial/port put main.py
 
     Or to upload a board_boot.py from a ./foo subdirectory and save it as boot.py
     in the board's root run:
 
-      ampy --port /board/serial/port put ./foo/board_boot.py boot.py
+      obmpy --port /board/serial/port put ./foo/board_boot.py boot.py
 
     To upload a local folder adafruit_library and all of its child files/folders
     as an item under the board's root run:
 
-      ampy --port /board/serial/port put adafruit_library
+      obmpy --port /board/serial/port put adafruit_library
 
     Or to put a local folder adafruit_library on the board under the path
     /lib/adafruit_library on the board run:
 
-      ampy --port /board/serial/port put adafruit_library /lib/adafruit_library
+      obmpy --port /board/serial/port put adafruit_library /lib/adafruit_library
     """
     # Use the local filename if no remote filename is provided.
     if remote is None:
@@ -291,7 +300,7 @@ def rm(remote_file):
 
     For example to delete main.py from the root of a board run:
 
-      ampy --port /board/serial/port rm main.py
+      obmpy --port /board/serial/port rm main.py
     """
     # Delete the provided file/directory on the board.
     board_files = files.Files(_board)
@@ -313,7 +322,7 @@ def rmdir(remote_folder, missing_okay):
     For example to delete everything under /adafruit_library from the root of a
     board run:
 
-      ampy --port /board/serial/port rmdir adafruit_library
+      obmpy --port /board/serial/port rmdir adafruit_library
     """
     # Delete the provided file/directory on the board.
     board_files = files.Files(_board)
@@ -341,11 +350,11 @@ def run(local_file, no_output):
 
     For example to run a test.py script and print any output until it finishes:
 
-      ampy --port /board/serial/port run test.py
+      obmpy --port /board/serial/port run test.py
 
     Or to run test.py and not wait for it to finish:
 
-      ampy --port /board/serial/port run --no-output test.py
+      obmpy --port /board/serial/port run --no-output test.py
     """
     # Run the provided file and print its output.
     board_files = files.Files(_board)
@@ -388,7 +397,7 @@ def reset(mode):
     Will connect to the board and perform a reset.  Depending on the board
     and firmware, several different types of reset may be supported.
 
-      ampy --port /board/serial/port reset
+      obmpy --port /board/serial/port reset
     """
     _board.enter_raw_repl()
     if mode == "SOFT":

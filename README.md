@@ -1,6 +1,6 @@
 ## obmpy
 
-This tool is modified from [ampy](https://github.com/scientifichackers/ampy), which fixes the bug that the serial port can not time out, and supports calling with python -m
+This tool is modified from [ampy](https://github.com/scientifichackers/ampy), which fixes the bug that the serial port can not time out, and supports calling with python -m. At the same time, it also supports setting rts/dtr to support K210 MaixDock and other devices that need to set the rts and dtr level to high to run.
 
 MicroPython Tool (obmpy) - Utility to interact with a CircuitPython or MicroPython board over a serial connection.
 
@@ -48,6 +48,7 @@ You should see usage information displayed like below:
       -p, --port PORT  Name of serial port for connected board.  [required]
       -b, --baud BAUD  Baud rate for the serial connection. (default 115200)
       -d, --delay DELAY Delay in seconds before entering RAW MODE (default 0)
+      -r, --rtsdtr Set RTS/DTR flow control (default True)
       --help           Show this message and exit.
 
     Commands:
@@ -89,18 +90,18 @@ unfortunately must have a board connected and serial port specified):
 
 ## Configuration
 
-For convenience you can set an `AMPY_PORT` environment variable which will be used
+For convenience you can set an `OBMPY_PORT` environment variable which will be used
 if the port parameter is not specified.  For example on Linux or OSX:
 
-    export AMPY_PORT=/dev/tty.SLAB_USBtoUART
+    export OBMPY_PORT=/dev/tty.SLAB_USBtoUART
     obmpy ls
 
 Or on Windows (untested) try the SET command:
 
-    set AMPY_PORT=COM4
+    set OBMPY_PORT=COM4
     obmpy ls
 
-Similarly, you can set `AMPY_BAUD` and `AMPY_DELAY` to control your baud rate and
+Similarly, you can set `OBMPY_BAUD` and `OBMPY_DELAY` to control your baud rate and
 the delay before entering RAW MODE.
 
 To set these variables automatically each time you run `obmpy`, copy them into a
@@ -109,10 +110,12 @@ file named `.obmpy`:
 ```sh
 # Example .obmpy file
 # Please fill in your own port, baud rate, and delay
-AMPY_PORT=/dev/cu.wchusbserial1410
-AMPY_BAUD=115200
+OBMPY_PORT=/dev/cu.wchusbserial1410
+OBMPY_BAUD=115200
 # Fix for macOS users' "Could not enter raw repl"; try 2.0 and lower from there:
-AMPY_DELAY=0.5
+OBMPY_DELAY=0.5
+# To set rts and dtr level
+OBMPY_RTSDTR=False
 ```
 
 You can put the `.obmpy` file in your working directory, one of its parents, or in

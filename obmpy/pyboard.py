@@ -119,7 +119,7 @@ class TelnetToSerial:
             return n_waiting
 
 class Pyboard:
-    def __init__(self, device, baudrate=115200, user='micro', password='python', wait=0, rawdelay=0):
+    def __init__(self, device, baudrate=115200, user='micro', password='python', wait=0, rawdelay=0, rtsdtr=True):
         global _rawdelay
         _rawdelay = rawdelay
         if device and device[0].isdigit() and device[-1].isdigit() and device.count('.') == 3:
@@ -131,6 +131,9 @@ class Pyboard:
             for attempt in range(wait + 1):
                 try:
                     self.serial = serial.Serial(device, baudrate=baudrate, interCharTimeout=1, timeout=0.5)
+                    if(not rtsdtr):
+                        self.serial.setRTS(False)
+                        self.serial.setDTR(False)
                     break
                 except (OSError, IOError): # Py2 and Py3 have different errors
                     if wait == 0:
@@ -188,14 +191,15 @@ class Pyboard:
             self.serial.read(n)
             n = self.serial.inWaiting()
 
-        for retry in range(0, 3): 
+        retry_time = 3
+        for retry in range(0, retry_time): 
 
             self.serial.write(b'\r\x01') # ctrl-A: enter raw REPL
             data = self.read_until(1, b'raw REPL; CTRL-B to exit\r\n>')
             if data.endswith(b'raw REPL; CTRL-B to exit\r\n>'):
                 break
             else:
-                if retry >= 3:
+                if retry >= (retry_time - 1):
                     print(data)
                     raise PyboardError('could not enter raw repl')
                 time.sleep(0.2)

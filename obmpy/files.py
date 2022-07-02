@@ -180,37 +180,6 @@ class Files(object):
         # Parse the result list and return it.
         return ast.literal_eval(out.decode("utf-8"))
 
-    def get_rest_space(self, directory="/"):
-        """
-        """
-
-        # Make sure directory starts with slash, for consistency.
-        if not directory.startswith("/"):
-            directory = "/" + directory
-
-        command = """
-            import os
-            statvfs_fields = ['bsize','frsize','blocks','bfree','bavail','files','ffree',]
-            st = dict(zip(statvfs_fields, os.statvfs('{0}')))
-            print(st)
-        """.format(
-            directory
-        )
-        self._pyboard.enter_raw_repl()
-        try:
-            out = self._pyboard.exec_(textwrap.dedent(command))
-        except PyboardError as ex:
-            # Check if this is an OSError #2, i.e. directory doesn't exist and
-            # rethrow it as something more descriptive.
-            message = ex.args[2].decode("utf-8")
-            if message.find("OSError") != -1 and message.find("2") != 1:
-                raise RuntimeError("No such directory: {0}".format(directory))
-            else:
-                raise ex
-        self._pyboard.exit_raw_repl()
-        # Parse the result list and return it.
-        return ast.literal_eval(out.decode("utf-8"))
-
     def mkdir(self, directory, exists_okay=False):
         """Create the specified directory.  Note this cannot create a recursive
         hierarchy of directories, instead each one should be created separately.

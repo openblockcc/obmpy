@@ -40,7 +40,7 @@ You should see usage information displayed like below:
 
     Usage: obmpy [OPTIONS] COMMAND [ARGS]...
 
-      obmpy - Adafruit MicroPython Tool
+      obmpy - OpenBlock MicroPython Tool
 
       Obmpy is a tool to control MicroPython boards over a serial connection.
       Using obmpy you can manipulate files on the board's internal filesystem and

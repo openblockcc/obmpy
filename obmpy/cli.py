@@ -227,6 +227,15 @@ def ls(directory, long_format, recursive):
     for f in board_files.ls(directory, long_format=long_format, recursive=recursive):
         print(f)
 
+@cli.command()
+@click.argument("directory", default="/")
+def restspace(directory):
+    """get rest space of board.
+    """
+    # get rest space of board.
+    board_files = files.Files(_board)
+    print(board_files.get_rest_space(directory))
+
 
 @cli.command()
 @click.argument("local", type=click.Path(exists=True))

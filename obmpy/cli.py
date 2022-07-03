@@ -233,8 +233,8 @@ def fsi(directory):
     """Get the file system information.
 
     Get information about the file system containing the given path. 
-    The default path is the root, /. With this information we can calculate 
-    the remaining space in the file system
+    The default path is the root, /. With this information we can calculate
+    how much free space is available in the file system.
 
     For example to get the file system information about the root run:
 

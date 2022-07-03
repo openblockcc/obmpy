@@ -229,12 +229,24 @@ def ls(directory, long_format, recursive):
 
 @cli.command()
 @click.argument("directory", default="/")
-def restspace(directory):
-    """get rest space of board.
+def fsi(directory):
+    """Get the file system information.
+
+    Get information about the file system containing the given path. 
+    The default path is the root, /. With this information we can calculate 
+    the remaining space in the file system
+
+    For example to get the file system information about the root run:
+
+      obmpy --port /board/serial/port fsi
+
+    Or to get the file system information about the /foo/bar directory on the board run:
+    
+      obmpy --port /board/serial/port fsi /foo/bar
     """
     # get rest space of board.
     board_files = files.Files(_board)
-    print(board_files.get_rest_space(directory))
+    print(board_files.fsi(directory))
 
 
 @cli.command()

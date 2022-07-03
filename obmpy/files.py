@@ -180,8 +180,9 @@ class Files(object):
         # Parse the result list and return it.
         return ast.literal_eval(out.decode("utf-8"))
 
-    def get_rest_space(self, directory="/"):
-        """
+    def fsi(self, directory="/"):
+        """Get the file system information about the specified directory (or root
+        if none is specified).
         """
 
         # Make sure directory starts with slash, for consistency.

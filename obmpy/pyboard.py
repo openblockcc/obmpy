@@ -119,10 +119,11 @@ class TelnetToSerial:
             return n_waiting
 
 class Pyboard:
-    def __init__(self, device, baudrate=115200, user='micro', password='python', wait=0, rawdelay=0, rtsdtr=True, abort_time = 2):
-        global _rawdelay, _abort_time
+    def __init__(self, device, baudrate=115200, user='micro', password='python', wait=0, rawdelay=0, rts=True, dtr=True, abort_time = 2, raw_repl_state = "N"):
+        global _rawdelay, _abort_time, _raw_repl_state
         _rawdelay = rawdelay
         _abort_time = abort_time
+        _raw_repl_state = raw_repl_state
         if device and device[0].isdigit() and device[-1].isdigit() and device.count('.') == 3:
             # device looks like an IP address
             self.serial = TelnetToSerial(device, user, password, read_timeout=0.5)
@@ -132,8 +133,9 @@ class Pyboard:
             for attempt in range(wait + 1):
                 try:
                     self.serial = serial.Serial(device, baudrate=baudrate, interCharTimeout=1, timeout=0.5)
-                    if(not rtsdtr):
+                    if(not rts):
                         self.serial.setRTS(False)
+                    if(not dtr):
                         self.serial.setDTR(False)
                     break
                 except (OSError, IOError): # Py2 and Py3 have different errors
@@ -176,6 +178,9 @@ class Pyboard:
         return data
 
     def enter_raw_repl(self):
+        if(_raw_repl_state == "C" or _raw_repl_state == "E"):
+            return
+    
         # Brief delay before sending RAW MODE char if requests
         if _rawdelay > 0:
             time.sleep(_rawdelay)
@@ -230,6 +235,10 @@ class Pyboard:
             raise PyboardError('could not enter raw repl')
 
     def exit_raw_repl(self):
+        if(_raw_repl_state == "C" or _raw_repl_state == "S"):
+            print("not exit_raw_repl")
+            return
+
         self.serial.write(b'\r\x02') # ctrl-B: enter friendly REPL
 
     def follow(self, timeout, data_consumer=None):
@@ -255,9 +264,10 @@ class Pyboard:
             command_bytes = bytes(command, encoding='utf8')
 
         # check we have a prompt
-        data = self.read_until(1, b'>')
-        if not data.endswith(b'>'):
-            raise PyboardError('could not enter raw repl')
+        if(_raw_repl_state == "N" or _raw_repl_state == "S"):
+            data = self.read_until(1, b'>')
+            if not data.endswith(b'>'):
+                raise PyboardError('could not enter raw repl')
 
         # write command
         for i in range(0, len(command_bytes), 256):

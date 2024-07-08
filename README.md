@@ -40,47 +40,49 @@ You should see usage information displayed like below:
 
     Usage: obmpy [OPTIONS] COMMAND [ARGS]...
 
-        obmpy - OpenBlock MicroPython Tool
+    obmpy - OpenBlock MicroPython Tool
 
-        Obmpy is a tool to control MicroPython boards over a serial connection.
-        Using obmpy you can manipulate files on the board's internal filesystem
-        and even run scripts.
+    Obmpy is a tool to control MicroPython boards over a serial connection.
+    Using obmpy you can manipulate files on the board's internal filesystem and
+    even run scripts.
 
     Options:
-        -p, --port PORT             Name of serial port for connected board.  Can
-                                    optionally specify with OBMPY_PORT environment
-                                    variable.  [required]
-
-        -b, --baud BAUD             Baud rate for the serial connection (default
-                                    115200).  Can optionally specify with OBMPY_BAUD
-                                    environment variable.
-
-        -d, --delay DELAY           Delay in seconds before entering RAW MODE
-                                    (default 0). Can optionally specify with
-                                    OBMPY_DELAY environment variable.
-
-        -r, --rtsdtr RTSDTR         Set RTS/DTR flow control (default True). Can
-                                    optionally specify with OBMPY_RTSDTR environment
-                                    variable.
-
-        -a, --abort-time ABORTTIME  The number of times an abort command was sent
-                                    after entering repl mode (default 2). Can
-                                    optionally specify with ABORT_TIME environment
-                                    variable.
-
-        --version                   Show the version and exit.
-        --help                      Show this message and exit.
+    -p, --port PORT             Name of serial port for connected board.  Can
+                                optionally specify with OBMPY_PORT environment
+                                variable.  [required]
+    -b, --baud BAUD             Baud rate for the serial connection (default
+                                115200).  Can optionally specify with OBMPY_BAUD
+                                environment variable.
+    -d, --delay DELAY           Delay in seconds before entering RAW MODE
+                                (default 0). Can optionally specify with
+                                OBMPY_DELAY environment variable.
+    -R, --rts RTS               Set RTS flow control (default True). Can
+                                optionally specify with OBMPY_RTS environment
+                                variable.
+    -D, --dtr DTR               Set DTR flow control (default True). Can
+                                optionally specify with OBMPY_DTR environment
+                                variable.
+    -a, --abort-time ABORTTIME  The number of times an abort command was sent
+                                after entering repl mode (default 2). Can
+                                optionally specify with ABORT_TIME environment
+                                variable.
+    -s, --state STATE           Set raw repl state (default N). If it is the
+                                default value, the raw REPL will be opened and
+                                exited on each command. This can be set to
+                                N|S|C|E
+    --version                   Show the version and exit.
+    --help                      Show this message and exit.
 
     Commands:
-        fsi    Get the file system information.
-        get    Retrieve a file from the board.
-        ls     List contents of a directory on the board.
-        mkdir  Create a directory on the board.
-        put    Put a file or folder and its contents on the board.
-        reset  Perform soft reset/reboot of the board.
-        rm     Remove a file from the board.
-        rmdir  Forcefully remove a folder and all its children from the board.
-        run    Run a script and print its output.
+    fsi    Get the file system information.
+    get    Retrieve a file from the board.
+    ls     List contents of a directory on the board.
+    mkdir  Create a directory on the board.
+    put    Put a file or folder and its contents on the board.
+    reset  Perform soft reset/reboot of the board.
+    rm     Remove a file from the board.
+    rmdir  Forcefully remove a folder and all its children from the board.
+    run    Run a script and print its output.
 
 If you'd like to install from the Github source then use the standard Python
 setup.py install (or develop mode):
@@ -139,7 +141,8 @@ OBMPY_BAUD=115200
 # Fix for macOS users' "Could not enter raw repl"; try 2.0 and lower from there:
 OBMPY_DELAY=0.5
 # To set rts and dtr level
-OBMPY_RTSDTR=False
+OBMPY_RTS=False
+OBMPY_DTR=False
 # Fix for k210 'could not enter raw repl', Just send one 0x03 when try to bort task.
 OBMPY_ABORTTIME=1
 ```

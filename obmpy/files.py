@@ -257,7 +257,7 @@ class Files(object):
                 chunk = "b" + chunk
             self._pyboard.exec_("f.write({0})".format(chunk))
             if i != 0 and i % 2000 == 0: # when size % 2k == 0, print process
-                print('writing... ({}%)\n'.format(int(i / size * 100)), end='')
+                print('writing... ({}%)\n'.format(int(i / size * 100)), end='', flush=True)
         
         print('writing... (100%)\n', end='')
         self._pyboard.exec_("f.close()")

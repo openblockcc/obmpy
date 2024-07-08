@@ -236,7 +236,6 @@ class Pyboard:
 
     def exit_raw_repl(self):
         if(_raw_repl_state == "C" or _raw_repl_state == "S"):
-            print("not exit_raw_repl")
             return
 
         self.serial.write(b'\r\x02') # ctrl-B: enter friendly REPL

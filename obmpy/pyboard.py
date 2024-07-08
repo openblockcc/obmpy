@@ -263,9 +263,9 @@ class Pyboard:
             command_bytes = bytes(command, encoding='utf8')
 
         # check we have a prompt
-        if(_raw_repl_state == "N" or _raw_repl_state == "S"):
-            data = self.read_until(1, b'>')
-            if not data.endswith(b'>'):
+        data = self.read_until(1, b'>')
+        if not data.endswith(b'>'):
+            if(_raw_repl_state == "N" or _raw_repl_state == "S"):
                 raise PyboardError('could not enter raw repl')
 
         # write command

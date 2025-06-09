@@ -48,7 +48,7 @@ def windows_full_port_name(portname):
     # 9 are just referred to by COM1, COM2, etc. (wacky!)  See this post for
     # more info and where this code came from:
     # http://eli.thegreenplace.net/2009/07/31/listing-all-serial-ports-on-windows-with-python/
-    m = re.match("^COM(\d+)$", portname)
+    m = re.match(r"^COM(\d+)$", portname)
     if m and int(m.group(1)) < 10:
         return portname
     else:
@@ -118,7 +118,7 @@ def windows_full_port_name(portname):
     help="Set raw repl state (default N). If it is the default value, the raw REPL will be opened and exited on each command. This can be set to N|S|C|E",
     metavar="STATE",
 )
-@click.version_option()
+@click.version_option(package_name="openblock-obmpy")
 def cli(port, baud, delay, rts, dtr, abort_time, state):
     """obmpy - OpenBlock MicroPython Tool
 
